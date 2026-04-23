@@ -14,9 +14,10 @@
 <body>
     <div class="box">
         <h2>Word 轉 PDF</h2>
+        <!-- 確保 action 對應到 server.js 的路徑 -->
         <form action="/convert" method="POST" enctype="multipart/form-data">
             <input type="file" name="file" accept=".docx" required><br>
-            <button type="submit">開始轉換並下載</button>
+            <button type="submit" onclick="this.innerText='轉換中...請稍候'">開始轉換並下載</button>
         </form>
     </div>
     <a href="index.html" class="back-btn">← 返回首頁</a>
