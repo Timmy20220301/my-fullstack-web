@@ -7,6 +7,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('Public'));
 
+// 引入路徑工具
+const path = require('path');
+
+// 強制讓首頁請求導向到 index.html
+app.get('/', (req, res) => {
+    // 這裡會自動去找 Public 資料夾下的 index.html
+    res.sendFile(path.join(__dirname, 'Public', 'index.html'));
+});
+
+
 // 1. 連接雲端資料庫
 const MONGODB_URI = "mongodb+srv://shuuseitei:Dk130425g@cluster0.0lmpwcf.mongodb.net/myTodoDB?retryWrites=true&w=majority";
 
