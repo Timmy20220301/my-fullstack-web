@@ -1,3 +1,5 @@
+require('dotenv').config(); // 1. 載入 dotenv
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose'); // 換成 mongoose
@@ -16,9 +18,8 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Public', 'index.html'));
 });
 
-
 // 1. 連接雲端資料庫
-const MONGODB_URI = "mongodb+srv://shuuseitei:Dk130425g@cluster0.0lmpwcf.mongodb.net/myTodoDB?retryWrites=true&w=majority";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // 連線逾時
 const connectionOptions = {
