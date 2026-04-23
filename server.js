@@ -1,12 +1,3 @@
-const fs = require('fs');
-const path = require('path');
-
-// 確保 uploads 資料夾存在 (解決 GitHub 不上傳空資料夾的問題)
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-}
-
 require('dotenv').config(); // 1. 載入 dotenv
 
 const express = require('express');
@@ -17,6 +8,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static('Public'));
+
+// 引入路徑工具
+const path = require('path');
 
 // 強制讓首頁請求導向到 index.html
 app.get('/', (req, res) => {
@@ -103,88 +97,4 @@ app.put('/tasks/:index', async (req, res) => {
     }
 });
 
-// 電腦 AI 邏輯：尋找最佳移動
-app.post('/ttt-move', (req, res) => {
-    const board = req.body.board;
-
-    // Minimax 核心演算法：這才是真正的「智慧」
-    function minimax(currBoard, player) {
-        const availSpots = currBoard.map((v, i) => v === "" ? i : null).filter(v => v !== null);
-        
-        // 檢查終止狀態
-        if (checkWin(currBoard, "O")) return { score: -10 };
-        if (checkWin(currBoard, "X")) return { score: 10 };
-        if (availSpots.length === 0) return { score: 0 };
-
-        const moves = [];
-        for (let i = 0; i < availSpots.length; i++) {
-            const move = {};
-            move.index = availSpots[i];
-            currBoard[availSpots[i]] = player;
-
-            if (player === "X") {
-                const result = minimax(currBoard, "O");
-                move.score = result.score;
-            } else {
-                const result = minimax(currBoard, "X");
-                move.score = result.score;
-            }
-
-            currBoard[availSpots[i]] = ""; // 恢復現場
-            moves.push(move);
-        }
-
-        let bestMove;
-        if (player === "X") {
-            let bestScore = -10000;
-            for (let i = 0; i < moves.length; i++) {
-                if (moves[i].score > bestScore) {
-                    bestScore = moves[i].score;
-                    bestMove = i;
-                }
-            }
-        } else {
-            let bestScore = 10000;
-            for (let i = 0; i < moves.length; i++) {
-                if (moves[i].score < bestScore) {
-                    bestScore = moves[i].score;
-                    bestMove = i;
-                }
-            }
-        }
-        return moves[bestMove];
-    }
-
-    function checkWin(b, p) {
-        const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-        return wins.some(w => w.every(i => b[i] === p));
-    }
-
-    const bestMove = minimax(board, "X");
-    res.json({ index: bestMove.index });
-});
-
-const libre = require('libreoffice-convert');
-
-app.post('/convert', upload.single('file'), (req, res) => {
-    if (!req.file) return res.status(400).send('請上傳檔案');
-
-    const inputPath = req.file.path;
-    const fileBuffer = fs.readFileSync(inputPath);
-
-    // 進行專業格式轉換
-    libre.convert(fileBuffer, '.pdf', undefined, (err, done) => {
-        if (err) {
-            console.log(`轉換出錯: ${err}`);
-            return res.status(500).send('轉換失敗');
-        }
-        
-        // 直接將結果回傳給使用者下載
-        res.setHeader('Content-Type', 'application/pdf');
-        res.send(done);
-    });
-});
-
-// 不要只寫 3000，要改成這樣：
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 伺服器跑在 Port ${PORT}`));
+app.listen(3000, () => console.log('🚀 伺服器跑在 http://localhost:3000'));
