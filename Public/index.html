@@ -3,22 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的進階待辦清單</title>
-    <link rel="stylesheet" href="style.css"> <!-- 引入 CSS -->
+    <title>我的多功能入口</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center;
+            font-family: sans-serif;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px); /* 3x3 九宮格 */
+            grid-gap: 20px;
+        }
+        .grid-item {
+            width: 100px; height: 100px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            display: flex; justify-content: center; align-items: center;
+            color: white; text-decoration: none; font-weight: bold;
+            transition: 0.3s; border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .grid-item:hover { background: rgba(255, 255, 255, 0.4); transform: scale(1.1); }
+        .empty { opacity: 0.3; cursor: not-allowed; }
+    </style>
 </head>
 <body>
-
-    <div class="container">
-        <h2>我的待辦清單</h2>
-        <div class="input-group">
-            <input type="text" id="todoInput" placeholder="新增一項任務...">
-            <button onclick="addTask()">新增</button>
-        </div>
-        <ul id="todoList">
-            <!-- 任務會出現在這裡 -->
-        </ul>
+    <div class="grid-container">
+        <!-- 第一格：進去待辦清單 -->
+        <a href="todo.html" class="grid-item">待辦清單</a>
+        <!-- 其他格暫時留空 -->
+        <div class="grid-item empty">待續</div>
+        <div class="grid-item empty">待續</div>
+        <div class="grid-item empty">待續</div>
+        <div class="grid-item empty">待續</div>
+        <div class="grid-item empty">待續</div>
+        <div class="grid-item empty">待續</div>
+        <div class="grid-item empty">待續</div>
+        <div class="grid-item empty">待續</div>
     </div>
-
-    <script src="script.js"></script> <!-- 引入 JS -->
 </body>
 </html>
