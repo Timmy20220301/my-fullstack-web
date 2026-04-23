@@ -158,5 +158,26 @@ app.post('/ttt-move', (req, res) => {
     res.json({ index: bestMove.index });
 });
 
+const multer = require('multer');
+const docxConverter = require('docx-pdf');
+const path = require('path');
+const upload = multer({ dest: 'uploads/' }); // 設定暫存目錄
+
+// 文件轉換接口
+app.post('/convert', upload.single('file'), (req, res) => {
+    if (!req.file) return res.status(400).send('請上傳檔案');
+
+    const inputPath = req.file.path;
+    const outputPath = path.join(__dirname, 'uploads', `${req.file.filename}.pdf`);
+
+    docxConverter(inputPath, outputPath, (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send('轉換失敗');
+        }
+        // 轉換成功，把檔案傳回給使用者下載
+        res.download(outputPath, 'converted.pdf');
+    });
+});
 
 app.listen(3000, () => console.log('🚀 伺服器跑在 http://localhost:3000'));
