@@ -1,3 +1,12 @@
+const fs = require('fs');
+const path = require('path');
+
+// 確保 uploads 資料夾存在 (解決 GitHub 不上傳空資料夾的問題)
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
+
 require('dotenv').config(); // 1. 載入 dotenv
 
 const express = require('express');
