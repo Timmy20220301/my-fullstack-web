@@ -97,4 +97,21 @@ app.put('/tasks/:index', async (req, res) => {
     }
 });
 
+// 電腦 AI 邏輯：尋找最佳移動
+app.post('/ttt-move', (req, res) => {
+    const board = req.body.board; // 接收前端傳來的 [ "O", "", "X" ... ]
+
+    // 簡單的 AI：先找有沒有空格可以下 (這裡可以實作更強的 Minimax)
+    const availableMoves = board.map((val, idx) => val === "" ? idx : null).filter(val => val !== null);
+    
+    // 如果還有空位，隨機選一個（或寫入贏球邏輯）
+    if (availableMoves.length > 0) {
+        // 這裡我們模擬 AI 思考，回傳索引值
+        const randomIndex = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+        res.json({ index: randomIndex });
+    } else {
+        res.json({ index: -1 });
+    }
+});
+
 app.listen(3000, () => console.log('🚀 伺服器跑在 http://localhost:3000'));
