@@ -82,10 +82,14 @@ async function editTask(index, oldText) {
 
 // 修改讀取邏輯，把 index 傳進去
 window.onload = async () => {
-    const response = await fetch('/tasks');
+    // 改用 alert，手機一打開有跳出這個視窗就代表代碼更新成功了
+    alert("手機連線測試中..."); 
+
+    const response = await fetch('/tasks'); // 留一次就好
     const tasks = await response.json();
     const ul = document.getElementById('todoList');
-    ul.innerHTML = ""; // 先清空舊的
-    tasks.forEach((t, i) => createTaskElement(t, i)); // 傳入 i 作為 index
+    ul.innerHTML = ""; 
+    tasks.forEach((t, i) => createTaskElement(t, i));
 };
+
 
