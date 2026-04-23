@@ -33,17 +33,25 @@
     <script>
         async function getWeather() {
             try {
-                // 使用一個免註冊的開放天氣 API (wttr.in) 獲取 JSON 格式
-                const response = await fetch('https://wttr.in');
+                // 使用 Open-Meteo API，經緯度設定為台北 (25.03, 121.56)
+                const url = 'https://open-meteo.com';
+                const response = await fetch(url);
                 const data = await response.json();
                 
-                const temp = data.current_condition[0].temp_C;
-                const desc = data.current_condition[0].lang_zh ? data.current_condition[0].lang_zh[0].value : data.current_condition[0].weatherDesc[0].value;
+                // 取得目前的溫度和天氣代碼
+                const temp = data.current_weather.temperature;
+                const weatherCode = data.current_weather.weathercode;
                 
-                document.getElementById('temp').innerText = temp + '°C';
+                // 簡單的天氣代碼轉換
+                let desc = "晴朗";
+                if (weatherCode > 0) desc = "多雲";
+                if (weatherCode > 50) desc = "有雨";
+                
+                document.getElementById('temp').innerText = Math.round(temp) + '°C';
                 document.getElementById('desc').innerText = desc;
             } catch (error) {
-                document.getElementById('desc').innerText = "暫時無法取得數據";
+                console.error("錯誤詳情:", error);
+                document.getElementById('desc').innerText = "連線逾時，請重整頁面";
             }
         }
         getWeather();
