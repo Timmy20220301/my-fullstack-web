@@ -34,7 +34,7 @@
         async function getWeather() {
             try {
                 // 我將網址拆開組合，確保絕對不會被截斷
-                const base = 'https://open-meteo.com';
+                const base = 'https://api.open-meteo.com/v1/forecast';
                 const params = '?latitude=25.03&longitude=121.56&current_weather=true';
                 const apiUrl = base + params;
                 
