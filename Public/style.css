@@ -56,3 +56,13 @@ li {
     border: none;
     box-shadow: 0 4px 6px rgba(0,0,0,0.02);
 }
+
+#time-box {
+    flex-direction: column; /* 讓時間和文字上下排列 */
+    font-size: 14px;
+}
+#time-box small {
+    font-size: 10px;
+    margin-top: 4px;
+    opacity: 0.8;
+}
