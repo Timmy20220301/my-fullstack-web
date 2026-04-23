@@ -99,19 +99,64 @@ app.put('/tasks/:index', async (req, res) => {
 
 // 電腦 AI 邏輯：尋找最佳移動
 app.post('/ttt-move', (req, res) => {
-    const board = req.body.board; // 接收前端傳來的 [ "O", "", "X" ... ]
+    const board = req.body.board;
 
-    // 簡單的 AI：先找有沒有空格可以下 (這裡可以實作更強的 Minimax)
-    const availableMoves = board.map((val, idx) => val === "" ? idx : null).filter(val => val !== null);
-    
-    // 如果還有空位，隨機選一個（或寫入贏球邏輯）
-    if (availableMoves.length > 0) {
-        // 這裡我們模擬 AI 思考，回傳索引值
-        const randomIndex = availableMoves[Math.floor(Math.random() * availableMoves.length)];
-        res.json({ index: randomIndex });
-    } else {
-        res.json({ index: -1 });
+    // Minimax 核心演算法：這才是真正的「智慧」
+    function minimax(currBoard, player) {
+        const availSpots = currBoard.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+        
+        // 檢查終止狀態
+        if (checkWin(currBoard, "O")) return { score: -10 };
+        if (checkWin(currBoard, "X")) return { score: 10 };
+        if (availSpots.length === 0) return { score: 0 };
+
+        const moves = [];
+        for (let i = 0; i < availSpots.length; i++) {
+            const move = {};
+            move.index = availSpots[i];
+            currBoard[availSpots[i]] = player;
+
+            if (player === "X") {
+                const result = minimax(currBoard, "O");
+                move.score = result.score;
+            } else {
+                const result = minimax(currBoard, "X");
+                move.score = result.score;
+            }
+
+            currBoard[availSpots[i]] = ""; // 恢復現場
+            moves.push(move);
+        }
+
+        let bestMove;
+        if (player === "X") {
+            let bestScore = -10000;
+            for (let i = 0; i < moves.length; i++) {
+                if (moves[i].score > bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        } else {
+            let bestScore = 10000;
+            for (let i = 0; i < moves.length; i++) {
+                if (moves[i].score < bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        }
+        return moves[bestMove];
     }
+
+    function checkWin(b, p) {
+        const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        return wins.some(w => w.every(i => b[i] === p));
+    }
+
+    const bestMove = minimax(board, "X");
+    res.json({ index: bestMove.index });
 });
+
 
 app.listen(3000, () => console.log('🚀 伺服器跑在 http://localhost:3000'));
