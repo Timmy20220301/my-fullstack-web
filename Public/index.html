@@ -45,7 +45,22 @@
         <div class="grid-item empty">待續</div>
         <div class="grid-item empty">待續</div>
         <div class="grid-item empty">待續</div>
-        <div class="grid-item empty">待續</div>
     </div>
+    <script>
+        function updateTime() {
+            const timeDisplay = document.getElementById('live-time');
+            if (timeDisplay) {
+                const now = new Date();
+                // 取得小時與分鐘，並確保是兩位數 (例如 09:05)
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                timeDisplay.innerText = `${hours}:${minutes}`;
+            }
+        }
+        // 每 1000 毫秒 (1秒) 執行一次
+        setInterval(updateTime, 1000);
+        // 網頁一載入就立刻執行，不用等第一秒
+        updateTime();
+    </script>
 </body>
 </html>
