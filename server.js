@@ -164,24 +164,24 @@ app.post('/ttt-move', (req, res) => {
     res.json({ index: bestMove.index });
 });
 
-const multer = require('multer');
-const docxConverter = require('docx-pdf');
-const upload = multer({ dest: 'uploads/' }); // 設定暫存目錄
+const libre = require('libreoffice-convert');
 
-// 文件轉換接口
 app.post('/convert', upload.single('file'), (req, res) => {
     if (!req.file) return res.status(400).send('請上傳檔案');
 
     const inputPath = req.file.path;
-    const outputPath = path.join(__dirname, 'uploads', `${req.file.filename}.pdf`);
+    const fileBuffer = fs.readFileSync(inputPath);
 
-    docxConverter(inputPath, outputPath, (err, result) => {
+    // 進行專業格式轉換
+    libre.convert(fileBuffer, '.pdf', undefined, (err, done) => {
         if (err) {
-            console.log(err);
+            console.log(`轉換出錯: ${err}`);
             return res.status(500).send('轉換失敗');
         }
-        // 轉換成功，把檔案傳回給使用者下載
-        res.download(outputPath, 'converted.pdf');
+        
+        // 直接將結果回傳給使用者下載
+        res.setHeader('Content-Type', 'application/pdf');
+        res.send(done);
     });
 });
 
