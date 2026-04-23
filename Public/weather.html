@@ -33,47 +33,34 @@
     <script>
         async function getWeather() {
             try {
-                // 直接連線，不加額外的 Headers 檢查
-                const url = 'https://open-meteo.com';
-                const response = await fetch(url);
+                // 1. 使用絕對路徑，確保不會抓到自己的 index.html
+                const apiUrl = 'https://open-meteo.com';
                 
-                // 只要 response 不成功就報錯
-                if (!response.ok) throw new Error("伺服器沒反應");
+                console.log("正在連線至:", apiUrl);
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) throw new Error("API 伺服器沒有回應");
 
                 const data = await response.json();
                 
-                // 只要能執行到這，代表 JSON 拿到了
+                // 2. 解析資料
                 const temp = data.current_weather.temperature;
                 const code = data.current_weather.weathercode;
 
+                // 3. 渲染到畫面上
                 document.getElementById('temp').innerText = Math.round(temp) + '°C';
                 
-                // 簡易天氣對照
                 let status = "天氣晴";
                 if (code > 0) status = "多雲";
                 if (code > 50) status = "有雨";
                 document.getElementById('desc').innerText = status;
 
             } catch (error) {
-                console.error("錯誤細節:", error);
-                // 如果還是失敗，嘗試最後一個備用 API
-                document.getElementById('desc').innerText = "連線不穩，正在嘗試備用來源...";
-                getBackupWeather();
+                console.error("發生錯誤:", error);
+                document.getElementById('desc').innerText = "連線失敗，請檢查網路";
             }
         }
-
-        // 備用來源 (如果上面那個被你的網路擋住)
-        async function getBackupWeather() {
-            try {
-                const res = await fetch('https://wttr.in');
-                const data = await res.json();
-                const temp = data.current_condition[0].temp_C;
-                document.getElementById('temp').innerText = temp + '°C';
-                document.getElementById('desc').innerText = "台北即時氣溫";
-            } catch (e) {
-                document.getElementById('desc').innerText = "網路環境受限";
-            }
-        }
+        // 執行
         getWeather();
     </script>
 </body>
