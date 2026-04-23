@@ -185,4 +185,6 @@ app.post('/convert', upload.single('file'), (req, res) => {
     });
 });
 
-app.listen(3000, () => console.log('🚀 伺服器跑在 http://localhost:3000'));
+// 不要只寫 3000，要改成這樣：
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 伺服器跑在 Port ${PORT}`));
