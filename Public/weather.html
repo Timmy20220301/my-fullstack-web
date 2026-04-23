@@ -33,34 +33,26 @@
     <script>
         async function getWeather() {
             try {
-                // 1. 使用絕對路徑，確保不會抓到自己的 index.html
-                const apiUrl = 'https://open-meteo.com';
+                // 我將網址拆開組合，確保絕對不會被截斷
+                const base = 'https://open-meteo.com';
+                const params = '?latitude=25.03&longitude=121.56&current_weather=true';
+                const apiUrl = base + params;
                 
-                console.log("正在連線至:", apiUrl);
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) throw new Error("API 伺服器沒有回應");
+                console.log("連線目標網址為:", apiUrl);
 
+                const response = await fetch(apiUrl);
                 const data = await response.json();
                 
-                // 2. 解析資料
+                // 抓取溫度並顯示
                 const temp = data.current_weather.temperature;
-                const code = data.current_weather.weathercode;
-
-                // 3. 渲染到畫面上
                 document.getElementById('temp').innerText = Math.round(temp) + '°C';
-                
-                let status = "天氣晴";
-                if (code > 0) status = "多雲";
-                if (code > 50) status = "有雨";
-                document.getElementById('desc').innerText = status;
+                document.getElementById('desc').innerText = "台北即時天氣";
 
             } catch (error) {
-                console.error("發生錯誤:", error);
-                document.getElementById('desc').innerText = "連線失敗，請檢查網路";
+                console.error("錯誤發生:", error);
+                document.getElementById('desc').innerText = "連線失敗";
             }
         }
-        // 執行
         getWeather();
     </script>
 </body>
