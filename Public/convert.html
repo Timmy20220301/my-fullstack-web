@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Word 轉 PDF</title>
+    <style>
+        body { background: #45a247; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; color: white; font-family: sans-serif; }
+        .box { background: white; padding: 30px; border-radius: 15px; color: #333; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        input { margin: 20px 0; }
+        button { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        .back-btn { margin-top: 20px; color: white; text-decoration: none; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Word 轉 PDF</h2>
+        <form action="/convert" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".docx" required><br>
+            <button type="submit">開始轉換並下載</button>
+        </form>
+    </div>
+    <a href="index.html" class="back-btn">← 返回首頁</a>
+</body>
+</html>
